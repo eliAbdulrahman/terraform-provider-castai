@@ -1,0 +1,10 @@
+cluster_name     = "<place-holder>"
+cluster_region   = "<place-holder>"
+castai_api_token = "<place-holder>"
+resource_group = "<place-holder>"
+subscription_id = "<place-holder>"
+subnets = ["<place-holder1>","<place-holder2>"]
+readonly = true
+install_security_agent = false
+install_evictor_agent = false
+self_managed = true
