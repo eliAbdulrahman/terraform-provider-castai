@@ -1,0 +1,9 @@
+cluster_name     = "gke-5301-ea"
+cluster_region   = "us-central1"
+cluster_zones    =  ["us-central1-c", "us-central1-b"]
+castai_api_token = "1c97269c47f0672d072ab73bac5a6ae2f1d27200e43bacef0290f1659e340249"
+project_id       = "success-team-dev"
+subnets          = ["projects/success-team-dev/regions/us-central1/subnetworks/gke-5301-ea-ip-range-nodes"]
+readonly         = false
+install_security_agent = true
+service_accounts_unique_ids = ["117801207545159445063"]
