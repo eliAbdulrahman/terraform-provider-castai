@@ -1,0 +1,132 @@
+# GKE module variables.
+variable "cluster_name" {
+  type        = string
+  description = "GKE cluster name in GCP project."
+}
+
+variable "cluster_region" {
+  type        = string
+  description = "The region to create the cluster."
+}
+
+variable "cluster_zones" {
+  type        = list(string)
+  description = "The zones to create the cluster."
+}
+
+variable "kvisor_controller_extra_args" {
+  type        = map(string)
+  description = "Extra arguments for the kvisor controller. Optionally enable kvisor to lint Kubernetes YAML manifests, scan workload images and check if workloads pass CIS Kubernetes Benchmarks as well as NSA, WASP and PCI recommendations."
+  default = {
+    "kube-linter-enabled"        = "true"
+    "image-scan-enabled"         = "true"
+    "kube-bench-enabled"         = "true"
+    "kube-bench-cloud-provider"  = "gke"
+  }
+}
+
+variable "project_id" {
+  type        = string
+  description = "GCP project ID in which GKE cluster would be created."
+}
+
+variable "subnets" {
+  type        = list(string)
+  description = "Subnet IDs used by CAST AI to provision nodes."
+}
+
+variable "delete_nodes_on_disconnect" {
+  type        = bool
+  description = "Optionally delete Cast AI created nodes when the cluster is destroyed."
+  default     = false
+}
+
+# Variables required for connecting EKS cluster to CAST AI
+variable "castai_api_token" {
+  type        = string
+  description = "CAST AI API token created in console.cast.ai API Access keys section."
+}
+
+variable "castai_api_url" {
+  type        = string
+  description = "CAST AI api url"
+  default     = "https://api.cast.ai"
+}
+
+variable "service_accounts_unique_ids" {
+  type        = list(string)
+  description = "Service Accounts' unique IDs used by node pools in the cluster."
+  default     = []
+}
+
+variable "readonly" {
+  type        = bool
+  description = "Controls if cluster is connected to CAST AI in 'read-only' mode ir in 'Full Access' mode"
+  default     = true
+}
+
+variable "api_grpc_addr" {
+  type        = string
+  description = "CAST AI GRPC API address"
+  default     = "api-grpc.cast.ai:443"
+}
+
+variable "install_security_agent" {
+  type        = bool
+  default     = false
+  description = "Optional flag for installation of security agent (https://docs.cast.ai/product-overview/console/security-insights/)"
+}
+
+variable "self_managed" {
+  type        = bool
+  default     = false
+  description = "Whether CAST AI components' upgrades are managed by a customer; by default upgrades are managed CAST AI central system."
+}
+
+variable "kvisor_values" {
+  description = "List of YAML formatted string with kvisor values"
+  type        = list(string)
+  default     = []
+}
+
+variable "kvisor_version" {
+  description = "Version of kvisor chart. Default latest"
+  type        = string
+  default     = null
+}
+
+variable "install_evictor_agent" {
+  type        = bool
+  default     = false
+  description = "Optional flag for installation of evictor agent (https://docs.cast.ai/product-overview/console/security-insights/)"
+}
+
+variable "evictor_values" {
+  description = "List of YAML formatted string with evictor values"
+  type        = list(string)
+  default     = []
+}
+
+variable "evictor_version" {
+  description = "Version of evictor chart. Default latest"
+  type        = string
+  default     = null
+}
+
+variable "install_spothandler_agent" {
+  type        = bool
+  default     = false
+  description = "Optional flag for installation of spothandler agent (https://docs.cast.ai/product-overview/console/security-insights/)"
+}
+
+variable "spothandler_values" {
+  description = "List of YAML formatted string with spothandler values"
+  type        = list(string)
+  default     = []
+}
+
+variable "spothandler_version" {
+  description = "Version of spothandler chart. Default latest"
+  type        = string
+  default     = null
+}
