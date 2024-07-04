@@ -65,6 +65,12 @@ variable "readonly" {
   default     = true
 }
 
+variable "autoscaler_enabled" {
+  type        = bool
+  description = "Controls if CAST AI autoscaler is enabled"
+  default     = false
+}
+
 variable "api_grpc_addr" {
   type        = string
   description = "CAST AI GRPC API address"

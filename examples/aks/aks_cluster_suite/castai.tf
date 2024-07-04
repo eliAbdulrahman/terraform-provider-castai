@@ -30,6 +30,40 @@ resource "helm_release" "castai_agent" {
   }
 }
 
+resource "castai_autoscaler" "castai_autoscaler_policies" {
+  count      = var.readonly ? 0 : 1
+  cluster_id = castai_aks_cluster.this[0].id
+
+  autoscaler_settings {
+    enabled = var.autoscaler_enabled
+    node_templates_partial_matching_enabled = false
+
+    unschedulable_pods {
+      enabled = true
+    }
+
+    node_downscaler {
+      enabled = true
+
+      empty_nodes {
+        enabled = true
+      }
+
+      evictor {
+        aggressive_mode           = false
+        cycle_interval            = "5m10s"
+        dry_run                   = false
+        enabled                   = true
+        node_grace_period_minutes = 10
+        scoped_mode               = false
+      }
+    }
+  }
+
+  depends_on = [helm_release.castai_agent]
+}
+
+
 resource "castai_aks_cluster" "this" {
   count           = var.readonly ? 0 : 1
   name            = var.cluster_name

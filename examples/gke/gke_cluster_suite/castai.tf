@@ -107,6 +107,83 @@ resource "helm_release" "castai_cluster_controller" {
   }
 }
 
+resource "castai_autoscaler" "castai_autoscaler_policies" {
+  count      = var.readonly ? 0 : 1
+  cluster_id = castai_gke_cluster.this.id
+
+  autoscaler_settings {
+    enabled = var.autoscaler_enabled
+    node_templates_partial_matching_enabled = false
+
+    unschedulable_pods {
+      enabled = true
+    }
+
+    node_downscaler {
+      enabled = true
+
+      empty_nodes {
+        enabled = true
+      }
+
+      evictor {
+        aggressive_mode           = false
+        cycle_interval            = "5m10s"
+        dry_run                   = false
+        enabled                   = true
+        node_grace_period_minutes = 10
+        scoped_mode               = false
+      }
+    }
+  }
+
+  depends_on = [helm_release.castai_agent]
+}
+
+resource "castai_node_template" "default_by_castai" {
+  count            = var.readonly ? 0 : 1
+  name             = "default-by-castai"
+  configuration_id = castai_node_configuration.default[0].id
+  is_default       = true
+  is_enabled       = true
+  should_taint     = false
+
+  constraints {
+    on_demand          = true
+    spot               = true
+    use_spot_fallbacks = true
+
+    enable_spot_diversity                       = false
+    spot_diversity_price_increase_limit_percent = 20
+    storage_optimized_state = "disabled"
+    compute_optimized_state = ""
+  }
+}
+
+resource "castai_node_template" "spot_tmpl" {
+  count            = var.readonly ? 0 : 1
+  name             = "spot-tmpl"
+  configuration_id = castai_node_configuration.default[0].id
+  is_enabled       = true
+  should_taint     = true
+
+  custom_labels = {
+    "cloud.google.com/gke-spot" = "true"
+  }
+
+  constraints {
+    spot    = true
+  }
+
+  custom_taints {
+      key    = "cloud.google.com/gke-spot"
+      value  = "true"
+      effect = "NoSchedule"
+  }
+
+  depends_on = [castai_autoscaler.castai_autoscaler_policies]
+}
+
 resource "helm_release" "castai_kvisor" {
   count = var.install_security_agent && !var.self_managed ? 1 : 0
 
