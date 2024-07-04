@@ -33,6 +33,7 @@ variable "project_id" {
 variable "subnets" {
   type        = list(string)
   description = "Subnet IDs used by CAST AI to provision nodes."
+  default = []
 }
 
 variable "delete_nodes_on_disconnect" {

@@ -63,7 +63,7 @@ resource "castai_node_configuration" "default" {
   name           = "default"
   disk_cpu_ratio = 0
   min_disk_size  = 100
-  subnets        = var.subnets
+  subnets        = [module.vpc.subnets_ids[0]] # var.subnets
 }
 
 resource "castai_node_configuration_default" "this" {
