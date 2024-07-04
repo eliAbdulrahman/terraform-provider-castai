@@ -225,7 +225,7 @@ resource "helm_release" "castai_kvisor" {
   }
 
   set {
-    name  = "controller.extraargs.kube-bench-cloud-provider"
+    name  = "controller.extraArgs.kube-bench-cloud-provider"
     value = "gke"
   }
 
@@ -384,7 +384,7 @@ resource "helm_release" "castai_kvisor_self_managed" {
   }
 
   set {
-    name  = "controller.extraargs.kube-bench-cloud-provider"
+    name  = "controller.extraArgs.kube-bench-cloud-provider"
     value = "gke"
   }
 
