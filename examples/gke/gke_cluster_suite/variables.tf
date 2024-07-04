@@ -90,6 +90,12 @@ variable "self_managed" {
   description = "Whether CAST AI components' upgrades are managed by a customer; by default upgrades are managed CAST AI central system."
 }
 
+variable "gke_cluster_version" {
+  description = "The Kubernetes version of the masters. Defaults to the latest available version in the selected region"
+  type        = string
+  default     = "latest"
+}
+
 variable "kvisor_values" {
   description = "List of YAML formatted string with kvisor values"
   type        = list(string)
