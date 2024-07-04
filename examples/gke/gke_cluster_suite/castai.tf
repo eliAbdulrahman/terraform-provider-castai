@@ -56,7 +56,7 @@ resource "helm_release" "castai_agent" {
   }
 }
 
-resource "castai_node_configuration" "this" {
+resource "castai_node_configuration" "default" {
   count      = var.readonly ? 0 : 1
   cluster_id = castai_gke_cluster.this.id
 
@@ -69,7 +69,7 @@ resource "castai_node_configuration" "this" {
 resource "castai_node_configuration_default" "this" {
   count            = var.readonly ? 0 : 1
   cluster_id       = castai_gke_cluster.this.id
-  configuration_id = castai_node_configuration.this[0].id
+  configuration_id = castai_node_configuration.default[0].id
 }
 
 resource "helm_release" "castai_cluster_controller" {
