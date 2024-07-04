@@ -20,5 +20,5 @@ examples/localdev/*
 !examples/localdev/versions.tf
 e2e/**/.env
 e2e/**/local.auto.tfvars
-terraform.tfstate
+terraform.tfstate*
 .DS_Store
