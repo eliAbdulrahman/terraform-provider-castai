@@ -117,7 +117,7 @@ resource "castai_autoscaler" "castai_autoscaler_policies" {
     node_templates_partial_matching_enabled = false
 
     unschedulable_pods {
-      enabled = true
+      enabled = var.autoscaler_enabled
     }
 
     node_downscaler {
@@ -131,9 +131,25 @@ resource "castai_autoscaler" "castai_autoscaler_policies" {
         aggressive_mode           = false
         cycle_interval            = "5m10s"
         dry_run                   = false
-        enabled                   = true
+        enabled                   = var.install_evictor_agent
         node_grace_period_minutes = 10
         scoped_mode               = false
+      }
+    }
+
+    cluster_limits {
+      enabled = var.autoscaler_limits_enabled
+
+      #cpu {
+      #  min_cores = 1
+      #  max_cores = 150
+      #}
+      dynamic "cpu" {
+        for_each = var.autoscaler_cpu_limits != "" ? [var.autoscaler_cpu_limits] : []
+        content {
+          min_cores = cpu.value["min_cores"]
+          max_cores = cpu.value["max_cores"]
+        }
       }
     }
   }

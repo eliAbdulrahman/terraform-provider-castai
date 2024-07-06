@@ -72,6 +72,22 @@ variable "autoscaler_enabled" {
   default     = false
 }
 
+variable "autoscaler_limits_enabled" {
+  type        = bool
+  description = "Controls if CAST AI autoscaler CPU limits are enabled"
+  default     = false
+}
+
+variable "autoscaler_cpu_limits" {
+  type        = map(string)
+  description = "Extra arguments for the kvisor controller. Optionally enable kvisor to lint Kubernetes YAML manifests, scan workload images and check if workloads pass CIS Kubernetes Benchmarks as well as NSA, WASP and PCI recommendations."
+  default = {
+    "max_cores"    = 100
+    "min_cores"    = 1
+  }
+}
+
+
 variable "api_grpc_addr" {
   type        = string
   description = "CAST AI GRPC API address"
