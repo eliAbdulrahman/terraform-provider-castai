@@ -472,3 +472,43 @@ resource "helm_release" "castai_spothandler_self_managed" {
 
   depends_on = [helm_release.castai_agent]
 }
+
+resource "helm_release" "castai-egressd" {
+  count = var.install_egressd_agent && var.self_managed ? 1 : 0
+
+  name             = "castai-egressd"
+  repository       = "https://castai.github.io/helm-charts"
+  chart            = "castai-egressd"
+  namespace        = "castai-agent"
+  create_namespace = true
+  cleanup_on_fail  = true
+
+  values  = var.audit_log_receiver_values
+  version = var.audit_log_receiver_version
+
+  lifecycle {
+    ignore_changes = [version]
+  }
+
+  depends_on = [helm_release.castai_agent, helm_release.castai_cluster_controller]
+}
+
+resource "helm_release" "castai_audit_logs_receiver" {
+  count = var.install_audit_logs_receiver && var.self_managed ? 1 : 0
+
+  name             = "castai-audit-logs-receiver"
+  repository       = "https://castai.github.io/helm-charts"
+  chart            = "castai-audit-logs-receiver"
+  namespace        = "castai-agent"
+  create_namespace = true
+  cleanup_on_fail  = true
+
+  values  = var.audit_log_receiver_values
+  version = var.audit_log_receiver_version
+
+  lifecycle {
+    ignore_changes = [version]
+  }
+
+  depends_on = [helm_release.castai_agent, helm_release.castai_cluster_controller]
+}

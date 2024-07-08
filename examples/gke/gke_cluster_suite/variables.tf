@@ -148,6 +148,18 @@ variable "install_spothandler_agent" {
   description = "Optional flag for installation of spothandler agent (https://docs.cast.ai/product-overview/console/security-insights/)"
 }
 
+variable "install_egressd_agent" {
+  type        = bool
+  default     = false
+  description = "Optional flag for installation of egressd for monitoring network costs (https://docs.cast.ai/docs/network-cost)"
+}
+
+variable "install_audit_logs_receiver" {
+  type        = bool
+  default     = false
+  description = "Optional flag for installation of the audit log receiver (https://docs.cast.ai/docs/audit-log-exporter)"
+}
+
 variable "spothandler_values" {
   description = "List of YAML formatted string with spothandler values"
   type        = list(string)
@@ -156,6 +168,30 @@ variable "spothandler_values" {
 
 variable "spothandler_version" {
   description = "Version of spothandler chart. Default latest"
+  type        = string
+  default     = null
+}
+
+variable "egressd_values" {
+  description = "List of YAML formatted string with egressd values"
+  type        = list(string)
+  default     = []
+}
+
+variable "egressd_version" {
+  description = "Version of egressd chart. Default latest"
+  type        = string
+  default     = null
+}
+
+variable "audit_log_receiver_values" {
+  description = "List of YAML formatted string with audit-log-receiver values"
+  type        = list(string)
+  default     = []
+}
+
+variable "audit_log_receiver_version" {
+  description = "Version of audit-log-receiver chart. Default latest"
   type        = string
   default     = null
 }
