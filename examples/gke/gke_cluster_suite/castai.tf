@@ -478,13 +478,13 @@ resource "helm_release" "castai-egressd" {
 
   name             = "castai-egressd"
   repository       = "https://castai.github.io/helm-charts"
-  chart            = "castai-egressd"
+  chart            = "egressd"
   namespace        = "castai-agent"
   create_namespace = true
   cleanup_on_fail  = true
 
-  values  = var.audit_log_receiver_values
-  version = var.audit_log_receiver_version
+  values  = var.egressd_values
+  version = var.egressd_version
 
   lifecycle {
     ignore_changes = [version]
