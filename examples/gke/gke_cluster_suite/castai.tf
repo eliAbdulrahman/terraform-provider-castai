@@ -160,6 +160,7 @@ resource "castai_autoscaler" "castai_autoscaler_policies" {
 resource "castai_node_template" "default_by_castai" {
   count            = var.readonly ? 0 : 1
   name             = "default-by-castai"
+  cluster_id       = castai_gke_cluster.this.id
   configuration_id = castai_node_configuration.default[0].id
   cluster_id       = castai_gke_cluster.this.id
   is_default       = true
@@ -181,6 +182,7 @@ resource "castai_node_template" "default_by_castai" {
 resource "castai_node_template" "spot_tmpl" {
   count            = var.readonly ? 0 : 1
   name             = "spot-tmpl"
+  # cluster_id       = castai_gke_cluster.this.id
   configuration_id = castai_node_configuration.default[0].id
   cluster_id       = castai_gke_cluster.this.id
   is_default       = false
