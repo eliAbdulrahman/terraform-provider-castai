@@ -252,119 +252,93 @@ resource "helm_release" "castai_kvisor" {
   depends_on = [helm_release.castai_agent]
 }
 
-# resource "helm_release" "castai_pod_pinner" {
-#   count = var.self_managed ? 0 : 1
-# 
-#   name             = "castai-pod-pinner"
-#   repository       = "https://castai.github.io/helm-charts"
-#   chart            = "castai-pod-pinner"
-#   namespace        = "castai-agent"
-#   create_namespace = true
-#   cleanup_on_fail  = true
-#   wait             = true
-# 
-#   version = var.pod_pinner_version
-# 
-#   set {
-#     name  = "castai.clusterID"
-#     value = castai_gke_cluster.castai_cluster.id
-#   }
-# 
-#   dynamic "set" {
-#     for_each = var.api_url != "" ? [var.api_url] : []
-#     content {
-#       name  = "castai.apiURL"
-#       value = var.api_url
-#     }
-#   }
-# 
-#   set_sensitive {
-#     name  = "castai.apiKey"
-#     value = castai_gke_cluster.castai_cluster.cluster_token
-#   }
-# 
-#   dynamic "set" {
-#     for_each = var.grpc_url != "" ? [var.grpc_url] : []
-#     content {
-#       name  = "castai.grpcURL"
-#       value = var.grpc_url
-#     }
-#   }
-# 
-#   dynamic "set" {
-#     for_each = var.castai_components_labels
-#     content {
-#       name  = "podLabels.${set.key}"
-#       value = set.value
-#     }
-#   }
-# 
-#   set {
-#     name  = "replicaCount"
-#     value = "0"
-#   }
-# 
-#   depends_on = [helm_release.castai_agent]
-# 
-#   lifecycle {
-#     ignore_changes = [set, version]
-#   }
-# }
+resource "helm_release" "castai_pod_pinner" {
+  count = var.install_precision_packer && !var.self_managed ? 1 : 0
 
-# resource "helm_release" "castai_pod_pinner_self_managed" {
-#   count = var.self_managed ? 1 : 0
-# 
-#   name             = "castai-pod-pinner"
-#   repository       = "https://castai.github.io/helm-charts"
-#   chart            = "castai-pod-pinner"
-#   namespace        = "castai-agent"
-#   create_namespace = true
-#   cleanup_on_fail  = true
-#   wait             = true
-# 
-#   version = var.pod_pinner_version
-# 
-#   set {
-#     name  = "castai.clusterID"
-#     value = castai_gke_cluster.castai_cluster.id
-#   }
-# 
-#   dynamic "set" {
-#     for_each = var.api_url != "" ? [var.api_url] : []
-#     content {
-#       name  = "castai.apiURL"
-#       value = var.api_url
-#     }
-#   }
-# 
-#   set_sensitive {
-#     name  = "castai.apiKey"
-#     value = castai_gke_cluster.castai_cluster.cluster_token
-#   }
-# 
-#   dynamic "set" {
-#     for_each = var.grpc_url != "" ? [var.grpc_url] : []
-#     content {
-#       name  = "castai.grpcURL"
-#       value = var.grpc_url
-#     }
-#   }
-# 
-#   dynamic "set" {
-#     for_each = var.castai_components_labels
-#     content {
-#       name  = "podLabels.${set.key}"
-#       value = set.value
-#     }
-#   }
-# 
-#   set {
-#     name  = "replicaCount"
-#     value = "0"
-#   }
-# 
-#   depends_on = [helm_release.castai_agent]
-# }
+  name             = "castai-pod-pinner"
+  repository       = "https://castai.github.io/helm-charts"
+  chart            = "castai-pod-pinner"
+  namespace        = "castai-agent"
+  create_namespace = true
+  cleanup_on_fail  = true
+  wait             = true
+
+  version = var.pod_pinner_version
+
+  set {
+    name  = "castai.clusterID"
+    value = castai_gke_cluster.this.id
+  }
+
+  dynamic "set" {
+    for_each = var.castai_api_url != "" ? [var.castai_api_url] : []
+    content {
+      name  = "castai.apiURL"
+      value = var.castai_api_url
+    }
+  }
+
+  set_sensitive {
+    name  = "castai.apiKey"
+    value = castai_gke_cluster.this.cluster_token
+  }
+
+  dynamic "set" {
+    for_each = var.api_grpc_addr != "" ? [var.api_grpc_addr] : []
+    content {
+      name  = "castai.grpcURL"
+      value = var.api_grpc_addr
+    }
+  }
+
+  depends_on = [helm_release.castai_agent]
+
+  lifecycle {
+    ignore_changes = [set, version]
+  }
+}
+
+resource "helm_release" "castai_pod_pinner_self_managed" {
+  count = var.install_precision_packer && var.self_managed ? 1 : 0
+
+  name             = "castai-pod-pinner"
+  repository       = "https://castai.github.io/helm-charts"
+  chart            = "castai-pod-pinner"
+  namespace        = "castai-agent"
+  create_namespace = true
+  cleanup_on_fail  = true
+  wait             = true
+
+  version = var.pod_pinner_version
+
+  set {
+    name  = "castai.clusterID"
+    value = castai_gke_cluster.this.id
+  }
+
+  dynamic "set" {
+    for_each = var.castai_api_url != "" ? [var.castai_api_url] : []
+    content {
+      name  = "castai.apiURL"
+      value = var.castai_api_url
+    }
+  }
+
+  set_sensitive {
+    name  = "castai.apiKey"
+    value = castai_gke_cluster.this.cluster_token
+  }
+
+  dynamic "set" {
+    for_each = var.api_grpc_addr != "" ? [var.api_grpc_addr] : []
+    content {
+      name  = "castai.grpcURL"
+      value = var.api_grpc_addr
+    }
+  }
+
+  depends_on = [helm_release.castai_agent]
+}
 
 resource "helm_release" "castai_kvisor_self_managed" {
   count = var.install_security_agent && var.self_managed ? 1 : 0

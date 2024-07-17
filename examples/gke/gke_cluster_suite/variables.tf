@@ -195,3 +195,15 @@ variable "audit_log_receiver_version" {
   type        = string
   default     = null
 }
+
+variable "pod_pinner_version" {
+  description = "Version of pod-pinner chart. Default latest"
+  type        = string
+  default     = null
+}
+
+variable "install_precision_packer" {
+  type        = bool
+  default     = false
+  description = "Optional flag for installation of the precision packer (https://docs.cast.ai/docs/pod-pinner)"
+}
