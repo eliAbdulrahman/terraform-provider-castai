@@ -1,4 +1,4 @@
-# 3. Connect GKE cluster to CAST AI in read-only mode.
+
 
 # Configure Data sources and providers required for CAST AI connection.
 provider "castai" {
@@ -140,10 +140,6 @@ resource "castai_autoscaler" "castai_autoscaler_policies" {
     cluster_limits {
       enabled = var.autoscaler_limits_enabled
 
-      #cpu {
-      #  min_cores = 1
-      #  max_cores = 150
-      #}
       dynamic "cpu" {
         for_each = var.autoscaler_cpu_limits != "" ? [var.autoscaler_cpu_limits] : []
         content {
