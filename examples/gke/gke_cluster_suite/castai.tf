@@ -497,5 +497,10 @@ resource "helm_release" "castai_audit_logs_receiver" {
     ignore_changes = [version]
   }
 
+  set_sensitive {
+    name  = "castai.apiKey"
+    value = castai_gke_cluster.this.cluster_token
+  }
+
   depends_on = [helm_release.castai_agent, helm_release.castai_cluster_controller]
 }
