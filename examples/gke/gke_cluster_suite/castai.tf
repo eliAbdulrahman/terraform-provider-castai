@@ -466,6 +466,17 @@ resource "helm_release" "castai-egressd" {
     ignore_changes = [version]
   }
 
+  set_sensitive {
+    name  = "castai.apiKey"
+    value = castai_gke_cluster.this.cluster_token
+  }
+
+  set {
+    name  = "castai.clusterID"
+    value = castai_gke_cluster.this.id
+  }
+
+
   depends_on = [helm_release.castai_agent, helm_release.castai_cluster_controller]
 }
 
