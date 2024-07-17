@@ -47,7 +47,7 @@ resource "helm_release" "castai_agent" {
   }
   set_sensitive {
     name  = "apiKey"
-    value = castai_gke_cluster.this.cluster_token # var.castai_api_token
+    value = castai_gke_cluster.this.cluster_token
   }
 
   # required until https://github.com/castai/helm-charts/issues/135 is fixed.
@@ -98,7 +98,7 @@ resource "helm_release" "castai_cluster_controller" {
 
   set_sensitive {
     name  = "castai.apiKey"
-    value = var.castai_api_token
+    value = castai_gke_cluster.this.cluster_token
   }
 
   depends_on = [helm_release.castai_agent]
@@ -228,7 +228,7 @@ resource "helm_release" "castai_kvisor" {
 
   set_sensitive {
     name  = "castai.apiKey"
-    value = var.castai_api_token
+    value = castai_gke_cluster.this.cluster_token
   }
 
   set {
@@ -360,8 +360,7 @@ resource "helm_release" "castai_kvisor_self_managed" {
 
   set_sensitive {
     name  = "castai.apiKey"
-    # value = castai_gke_cluster.this.cluster_token
-    value = var.castai_api_token
+    value = castai_gke_cluster.this.cluster_token
   }
 
   set {
@@ -444,7 +443,7 @@ resource "helm_release" "castai_spothandler_self_managed" {
 
   set_sensitive {
     name  = "apiKey"
-    value = var.castai_api_token
+    value = castai_gke_cluster.this.cluster_token
   }
 
   depends_on = [helm_release.castai_agent]
