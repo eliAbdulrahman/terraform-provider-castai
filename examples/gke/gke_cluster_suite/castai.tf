@@ -87,6 +87,11 @@ resource "helm_release" "castai_cluster_controller" {
     name  = "castai.clusterID"
     value = castai_gke_cluster.this.id
   }
+  
+  set {
+    name = "additionalEnv.LOG_LEVEL"
+    value = var.castai_log_level
+  }
 
   dynamic "set" {
     for_each = var.castai_api_url != "" ? [var.castai_api_url] : []

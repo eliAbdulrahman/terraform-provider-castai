@@ -66,6 +66,12 @@ variable "readonly" {
   default     = true
 }
 
+variable "castai_log_level" {
+  type        = string
+  description = "Log level of the castai cluster-controller."
+  default     = "5"
+}
+
 variable "autoscaler_enabled" {
   type        = bool
   description = "Controls if CAST AI autoscaler is enabled"
