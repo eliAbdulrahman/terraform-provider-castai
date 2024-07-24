@@ -133,7 +133,7 @@ variable "kvisor_version" {
 variable "install_evictor_agent" {
   type        = bool
   default     = false
-  description = "Optional flag for installation of evictor agent (https://docs.cast.ai/product-overview/console/security-insights/)"
+  description = "Optional flag for installation of evictor agent (https://docs.cast.ai/docs/evictor)"
 }
 
 variable "evictor_aggressive_mode" {
