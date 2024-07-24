@@ -128,7 +128,7 @@ resource "castai_autoscaler" "castai_autoscaler_policies" {
       }
 
       evictor {
-        aggressive_mode           = false
+        aggressive_mode           = var.evictor_aggressive_mode
         cycle_interval            = "5m10s"
         dry_run                   = false
         enabled                   = var.install_evictor_agent

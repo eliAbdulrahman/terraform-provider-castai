@@ -130,6 +130,12 @@ variable "install_evictor_agent" {
   description = "Optional flag for installation of evictor agent (https://docs.cast.ai/product-overview/console/security-insights/)"
 }
 
+variable "evictor_aggressive_mode" {
+  type        = bool
+  default     = false
+  description = "Allow evictor to consider single replica applications (https://docs.cast.ai/product-overview/console/security-insights/)"
+}
+
 variable "evictor_values" {
   description = "List of YAML formatted string with evictor values"
   type        = list(string)
