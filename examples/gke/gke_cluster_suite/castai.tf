@@ -163,7 +163,6 @@ resource "castai_node_template" "default_by_castai" {
   name             = "default-by-castai"
   cluster_id       = castai_gke_cluster.this.id
   configuration_id = castai_node_configuration.default[0].id
-  cluster_id       = castai_gke_cluster.this.id
   is_default       = true
   is_enabled       = true
   should_taint     = false
