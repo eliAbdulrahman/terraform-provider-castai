@@ -1,0 +1,21 @@
+cluster_name     = "eks-0000-"
+cluster_region   = <cluster-region>
+castai_log_level = "3"
+castai_api_token = <castai-full-access-api-token>
+autoscaler_enabled = true
+
+readonly = false
+self_managed = true
+
+install_security_agent = true
+install_precision_packer = true
+install_egressd_agent = true
+install_evictor_agent = true
+install_spothandler_agent = true
+install_audit_logs_receiver = true
+
+autoscaler_limits_enabled = true
+autoscaler_cpu_limits = {
+  "min_cores" = 2
+  "max_cores" = 16
+}
