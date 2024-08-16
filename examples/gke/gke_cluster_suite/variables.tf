@@ -25,6 +25,15 @@ variable "kvisor_controller_extra_args" {
   }
 }
 
+variable "kvisor_agent_extra_args" {
+  type        = map(string)
+  description = "Extra arguments for the kvisor agent. Optionally enable kvisor runtime daemon."
+  default = {
+    "ebpf-events-enabled"        = "true"
+    "log-level"                  = "info"
+  }
+}
+
 variable "project_id" {
   type        = string
   description = "GCP project ID in which GKE cluster would be created."
