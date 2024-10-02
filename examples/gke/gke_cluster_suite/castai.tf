@@ -272,11 +272,12 @@ resource "helm_release" "castai_kvisor_self_managed" {
 
   set {
     name = "agent.enabled"
-    value = "true"
+    value = var.install_security_agent
   }
 
   set {
     name  = "castai.clusterID"
+    value = castai_gke_cluster.this.id
   }
 
   set_sensitive {
@@ -396,50 +397,6 @@ resource "helm_release" "castai_pod_pinner_self_managed" {
       name  = "castai.grpcURL"
       value = var.api_grpc_addr
     }
-  }
-
-  depends_on = [helm_release.castai_agent]
-}
-
-resource "helm_release" "castai_kvisor_self_managed" {
-  count = var.install_security_agent && var.self_managed ? 1 : 0
-
-  name             = "castai-kvisor"
-  repository       = "https://castai.github.io/helm-charts"
-  chart            = "castai-kvisor"
-  namespace        = "castai-agent"
-  create_namespace = true
-  cleanup_on_fail  = true
-
-  values  = var.kvisor_values
-  version = var.kvisor_version
-
-  set {
-    name  = "castai.clusterid"
-    value = castai_gke_cluster.this.id
-  }
-
-  set_sensitive {
-    name  = "castai.apiKey"
-    value = castai_gke_cluster.this.cluster_token
-  }
-
-  set {
-    name  = "castai.grpcaddr"
-    value = var.api_grpc_addr
-  }
-
-  dynamic "set" {
-    for_each = var.kvisor_controller_extra_args
-    content {
-      name  = "controller.extraArgs.${set.key}"
-      value = set.value
-    }
-  }
-
-  set {
-    name  = "controller.extraArgs.kube-bench-cloud-provider"
-    value = "gke"
   }
 
   depends_on = [helm_release.castai_agent]
