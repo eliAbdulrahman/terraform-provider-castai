@@ -13,3 +13,9 @@ provider "kubernetes" {
     args = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--region", var.cluster_region]
   }
 }
+
+provider "castai" {
+  api_token = var.castai_api_token
+  api_url   = var.castai_api_url
+}
+

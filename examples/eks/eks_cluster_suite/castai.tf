@@ -1,23 +1,5 @@
 data "aws_caller_identity" "current" {}
 
-provider "castai" {
-  api_token = var.castai_api_token
-  api_url   = var.castai_api_url
-}
-
-provider "helm" {
-  kubernetes {
-    host                   = module.eks.cluster_endpoint
-    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-    exec {
-      api_version = "client.authentication.k8s.io/v1beta1"
-      command     = "aws"
-      # This requires the awscli to be installed locally where Terraform is executed.
-      args = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--region", var.cluster_region]
-    }
-  }
-}
-
 resource "castai_eks_user_arn" "castai_user_arn" {
   cluster_id = castai_eks_clusterid.cluster_id.id
 }
