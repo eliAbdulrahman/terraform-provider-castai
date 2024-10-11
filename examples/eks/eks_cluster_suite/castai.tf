@@ -306,11 +306,6 @@ resource "helm_release" "castai_kvisor" {
   version = var.kvisor_version
 
   set {
-    name = "agent.enabled"
-    value = "true"
-  }
-
-  set {
     name  = "castai.clusterID"
     value = castai_eks_cluster.this.id
   }
@@ -361,11 +356,6 @@ resource "helm_release" "castai_kvisor_self_managed" {
 
   values  = var.kvisor_values
   version = var.kvisor_version
-
-  set {
-    name = "agent.enabled"
-    value = "true"
-  }
 
   set {
     name  = "castai.clusterID"
