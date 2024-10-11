@@ -547,7 +547,7 @@ resource "helm_release" "castai_workload_autoscaler" {
 }
 
 resource "helm_release" "castai_audit_logs_receiver" {
-  count = var.install_audit_logs_receiver && var.self_managed ? 1 : 0
+  count            = var.install_audit_logs_receiver && var.self_managed ? 1 : 0
 
   name             = "castai-audit-logs-receiver"
   repository       = "https://castai.github.io/helm-charts"
