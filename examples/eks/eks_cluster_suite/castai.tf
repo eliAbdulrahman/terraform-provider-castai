@@ -487,7 +487,7 @@ resource "helm_release" "castai_pod_pinner_self_managed" {
 }
 
 resource "helm_release" "castai-egressd" {
-  count = var.install_egressd_agent && var.self_managed ? 1 : 0
+  count            = var.install_egressd_agent && var.self_managed ? 1 : 0
 
   name             = "castai-egressd"
   repository       = "https://castai.github.io/helm-charts"
@@ -509,7 +509,7 @@ resource "helm_release" "castai-egressd" {
   }
 
   set {
-    name  = "castai.clusterID"
+    name  = "castai.clusterid"
     value = castai_eks_cluster.this.id
   }
 
