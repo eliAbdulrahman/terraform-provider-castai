@@ -517,7 +517,7 @@ resource "helm_release" "castai-egressd" {
 }
 
 resource "helm_release" "castai_workload_autoscaler" {
-  count = var.woop_autoscaler_enabled && var.self_managed ? 1 : 0
+  count            = var.woop_autoscaler_enabled && var.self_managed ? 1 : 0
 
   name             = "castai-workload-autoscaler"
   repository       = "https://castai.github.io/helm-charts"
@@ -536,6 +536,11 @@ resource "helm_release" "castai_workload_autoscaler" {
   set_sensitive {
     name  = "castai.apiKey"
     value = var.castai_api_token
+  }
+
+  set {
+    name  = "castai.clusterID"
+    value = castai_eks_cluster.this.id
   }
 
   depends_on = [helm_release.castai_agent, helm_release.castai_cluster_controller]
