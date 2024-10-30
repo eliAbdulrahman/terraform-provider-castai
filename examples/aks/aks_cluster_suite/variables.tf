@@ -111,6 +111,25 @@ variable "evictor_version" {
   default     = null
 }
 
+variable "woop_autoscaler_enabled" {
+  type        = bool
+  description = "Controls if CAST AI workload optimization autoscaler is enabled"
+  default     = false
+}
+
+variable "workload_autoscaler_values" {
+  description = "List of YAML formatted string with workload-autoscaler values"
+  type        = list(string)
+  default     = []
+}
+
+variable "workload_autoscaler_version" {
+  description = "Version of workload-autoscaler chart. Default latest"
+  type        = string
+  default     = null
+}
+
+
 variable "tags" {
   type        = map(any)
   description = "Optional tags for new cluster nodes. This parameter applies only to new nodes - tags for old nodes are not reconciled."

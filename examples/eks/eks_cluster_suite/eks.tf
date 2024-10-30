@@ -63,3 +63,9 @@ resource "aws_security_group" "additional" {
     ]
   }
 }
+
+resource "null_resource" "metrics_server" {
+  provisioner "local-exec" {
+    command = "kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+  }
+}

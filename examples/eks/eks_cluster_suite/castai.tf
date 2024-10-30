@@ -78,7 +78,7 @@ resource "castai_node_configuration" "default" {
   min_disk_size  = 100
   subnets        = module.vpc.private_subnets
   eks {
-    max_pods_per_node_formula = "8"
+    max_pods_per_node_formula = "32"
     security_groups = [
       module.eks.cluster_security_group_id,
       module.eks.node_security_group_id,
@@ -104,7 +104,6 @@ resource "helm_release" "castai_cluster_controller" {
   create_namespace = true
   cleanup_on_fail  = true
   wait             = true
-  version          = "0.61.0" # From 0.56.2 To 0.61.0
 
   set {
     name  = "castai.clusterID"
@@ -569,4 +568,39 @@ resource "helm_release" "castai_audit_logs_receiver" {
   }
 
   depends_on = [helm_release.castai_agent, helm_release.castai_cluster_controller]
+}
+
+resource "helm_release" "castai_spothandler_self_managed" {
+  count = var.install_spothandler_agent && var.self_managed ? 1 : 0
+
+  name             = "castai-spot-handler"
+  repository       = "https://castai.github.io/helm-charts"
+  chart            = "castai-spot-handler"
+  namespace        = "castai-agent"
+  create_namespace = true
+  cleanup_on_fail  = true
+
+  values  = var.spothandler_values
+  version = var.spothandler_version
+
+  lifecycle {
+    ignore_changes = [version]
+  }
+
+  set {
+    name  = "castai.provider"
+    value = "eks"
+  }
+
+  set {
+    name  = "castai.clusterID"
+    value = castai_eks_cluster.this.id
+  }
+
+  set_sensitive {
+    name  = "apiKey"
+    value = castai_eks_cluster.this.cluster_token
+  }
+
+  depends_on = [helm_release.castai_agent]
 }

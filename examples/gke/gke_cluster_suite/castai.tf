@@ -1,20 +1,3 @@
-
-
-# Configure Data sources and providers required for CAST AI connection.
-provider "castai" {
-  api_token = var.castai_api_token
-  api_url   = var.castai_api_url
-}
-
-provider "helm" {
-  kubernetes {
-    host                   = "https://${module.gke.endpoint}"
-    token                  = data.google_client_config.default.access_token
-    cluster_ca_certificate = base64decode(module.gke.ca_certificate)
-    config_path            = "~/.kube/config"
-  }
-}
-
 module "castai-gke-iam" {
   source = "castai/gke-iam/castai"
 
@@ -182,12 +165,12 @@ resource "castai_node_template" "default_by_castai" {
 resource "castai_node_template" "spot_tmpl" {
   count            = var.readonly ? 0 : 1
   name             = "spot-tmpl"
-  # cluster_id       = castai_gke_cluster.this.id
   configuration_id = castai_node_configuration.default[0].id
   cluster_id       = castai_gke_cluster.this.id
   is_default       = false
   is_enabled       = true
   should_taint     = true
+  custom_instances_enabled = true
 
   custom_labels = {
     "cloud.google.com/gke-spot" = "true"

@@ -99,37 +99,67 @@ resource "castai_node_configuration_default" "this" {
 }
 
 # Deploy phase 2 configuration
-# resource "helm_release" "castai_cluster_controller" {
-#   count            = var.readonly ? 0 : 1
-#   name             = "cluster-controller"
-#   repository       = "https://castai.github.io/helm-charts"
-#   chart            = "castai-cluster-controller"
-#   namespace        = "castai-agent"
-#   create_namespace = true
-#   cleanup_on_fail  = true
-#   wait             = true
-# 
-#   set {
-#     name  = "castai.clusterID"
-#     value = castai_aks_cluster.this.id
-#   }
-# 
-#   dynamic "set" {
-#     for_each = var.castai_api_url != "" ? [var.castai_api_url] : []
-#     content {
-#       name  = "castai.apiURL"
-#       value = var.castai_api_url
-#     }
-#   }
-# 
-#   set_sensitive {
-#     name  = "castai.apiKey"
-#     value = var.castai_api_token
-#   }
-# 
-#   depends_on = [helm_release.castai_agent]
-# 
-#   lifecycle {
-#     ignore_changes = [version]
-#   }
-# }
+resource "helm_release" "castai_cluster_controller" {
+  count            = var.readonly ? 0 : 1
+  name             = "cluster-controller"
+  repository       = "https://castai.github.io/helm-charts"
+  chart            = "castai-cluster-controller"
+  namespace        = "castai-agent"
+  create_namespace = true
+  cleanup_on_fail  = true
+  wait             = true
+
+  set {
+    name  = "castai.clusterID"
+    value = castai_aks_cluster.this[0].id
+  }
+
+  dynamic "set" {
+    for_each = var.castai_api_url != "" ? [var.castai_api_url] : []
+    content {
+      name  = "castai.apiURL"
+      value = var.castai_api_url
+    }
+  }
+
+  set_sensitive {
+    name  = "castai.apiKey"
+    value = var.castai_api_token
+  }
+
+  depends_on = [helm_release.castai_agent]
+
+  lifecycle {
+    ignore_changes = [version]
+  }
+}
+
+resource "helm_release" "castai_workload_autoscaler" {
+  count            = var.woop_autoscaler_enabled && var.self_managed ? 1 : 0
+
+  name             = "castai-workload-autoscaler"
+  repository       = "https://castai.github.io/helm-charts"
+  chart            = "castai-workload-autoscaler"
+  namespace        = "castai-agent"
+  create_namespace = true
+  cleanup_on_fail  = true
+
+  values  = var.workload_autoscaler_values
+  version = var.workload_autoscaler_version
+
+  lifecycle {
+    ignore_changes = [version]
+  }
+
+  set_sensitive {
+    name  = "castai.apiKey"
+    value = var.castai_api_token
+  }
+
+  set {
+    name  = "castai.clusterID"
+    value = castai_aks_cluster.this[0].id
+  }
+
+  depends_on = [helm_release.castai_agent, helm_release.castai_cluster_controller]
+}

@@ -139,6 +139,7 @@ module "castai-gke-cluster" {
 
     unschedulable_pods = {
       enabled = true
+      custom_instances_enabled = true
     }
 
     node_downscaler = {
