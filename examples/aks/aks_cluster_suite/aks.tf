@@ -6,7 +6,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   location            = azurerm_resource_group.this.location
   dns_prefix          = var.cluster_name
   node_resource_group = "${var.cluster_name}-ng"
-  kubernetes_version  = "1.28"
+  kubernetes_version  = var.kubernetes_version
 
   default_node_pool {
     name = "default"

@@ -8,6 +8,12 @@ variable "cluster_region" {
   description = "Region of the cluster to be connected to CAST AI."
 }
 
+variable "kubernetes_version" {
+  type        = string
+  description = "The Kubernetes version specified when creating AKS managed cluster. Defaults to the latest available version when not specified"
+  default     = null
+}
+
 variable "resource_group" {
   type        = string
   description = "Azure resource group that contains the cluster."
