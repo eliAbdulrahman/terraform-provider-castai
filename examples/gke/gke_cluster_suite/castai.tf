@@ -501,6 +501,31 @@ resource "helm_release" "castai_audit_logs_receiver" {
   set_sensitive {
     name  = "castai.apiKey"
     value = castai_gke_cluster.this.cluster_token
+resource "helm_release" "castai_pod_node_lifecycle" {
+  count = var.install_pod_node_lifecycle && var.self_managed ? 1 : 0
+
+  name             = "castai-pod-node-lifecycle"
+  repository       = "https://castai.github.io/helm-charts"
+  chart            = "castai-pod-node-lifecycle"
+  namespace        = "castai-agent"
+  create_namespace = true
+  cleanup_on_fail  = true
+
+  values  = var.pod_node_lifecycle_values
+  version = var.pod_node_lifecycle_version
+
+  lifecycle {
+    ignore_changes = [version]
+  }
+
+  set {
+    name = "staticConfig.preset"
+    value = "allSpotExceptKubeSystem"
+  }
+
+  set_sensitive {
+    name  = "castai.apiKey"
+    value = var.castai_api_token
   }
 
   depends_on = [helm_release.castai_agent, helm_release.castai_cluster_controller]
