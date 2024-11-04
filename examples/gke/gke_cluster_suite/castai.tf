@@ -500,7 +500,12 @@ resource "helm_release" "castai_audit_logs_receiver" {
 
   set_sensitive {
     name  = "castai.apiKey"
-    value = castai_gke_cluster.this.cluster_token
+    value = var.castai_api_token
+  }
+
+  depends_on = [helm_release.castai_agent, helm_release.castai_cluster_controller]
+}
+
 resource "helm_release" "castai_pod_node_lifecycle" {
   count = var.install_pod_node_lifecycle && var.self_managed ? 1 : 0
 
