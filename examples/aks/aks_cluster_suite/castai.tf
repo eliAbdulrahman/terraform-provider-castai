@@ -98,6 +98,23 @@ resource "castai_node_configuration_default" "this" {
  configuration_id = castai_node_configuration.default[0].id
 }
 
+resource "castai_node_template" "spot_tmpl" {
+  count            = var.readonly ? 0 : 1
+  name             = "spot-tmpl"
+  configuration_id = castai_node_configuration.default[0].id
+  cluster_id       = castai_aks_cluster.this[0].id
+  is_default       = false
+  is_enabled       = true
+  should_taint     = true
+  custom_instances_enabled = true
+
+  constraints {
+    spot    = true
+  }
+
+  depends_on = [castai_autoscaler.castai_autoscaler_policies]
+}
+
 # Deploy phase 2 configuration
 resource "helm_release" "castai_cluster_controller" {
   count            = var.readonly ? 0 : 1
