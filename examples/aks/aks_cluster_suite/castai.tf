@@ -214,6 +214,41 @@ resource "helm_release" "castai_pod_node_lifecycle" {
 
   depends_on = [helm_release.castai_agent, helm_release.castai_cluster_controller]
 }
+
+resource "helm_release" "castai_hibernate" {
+  count = var.cluster_hibernate_enabled && var.self_managed ? 1 : 0
+
+  name             = "castai-hibernate"
+  repository       = "https://castai.github.io/helm-charts"
+  chart            = "castai-hibernate"
+  namespace        = "castai-agent"
+  create_namespace = true
+  cleanup_on_fail  = true
+
+  values  = var.hibernate_values
+  version = var.hibernate_version
+
+  lifecycle {
+    ignore_changes = [version]
+  }
+
+  set {
+    name  = "cloud"
+    value = "AKS"
+  }
+
+  set {
+    name = "pauseCronSchedule"
+    value = var.hibernate_pause_schedule
+  }
+
+  set {
+    name = "resumeCronSchedule"
+    value = var.hibernate_resume_schedule
+  }
+
+  set_sensitive {
+    name  = "apiKey"
     value = var.castai_api_token
   }
 

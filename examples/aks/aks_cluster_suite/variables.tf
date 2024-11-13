@@ -195,3 +195,33 @@ variable "install_precision_packer" {
   default     = false
   description = "Optional flag for installation of the precision packer (https://docs.cast.ai/docs/pod-pinner)"
 }
+
+variable "cluster_hibernate_enabled" {
+  type        = bool
+  description = "Controls if Cast AI Hibernate Cronjob is enabled"
+  default     = false
+}
+
+variable "hibernate_version" {
+  description = "Version of hibernate chart. Default latest"
+  type        = string
+  default     = null
+}
+
+variable "hibernate_values" {
+  description = "List of YAML formatted string with hibernate values"
+  type        = list(string)
+  default     = []
+}
+
+variable "hibernate_pause_schedule" {
+  description = "Cron formatted scheduling for pause cluster cronjob. Defaults to 18:15 every weekday"
+  type        = string
+  default     = "15 18 * * 1-5"
+}
+
+variable "hibernate_resume_schedule" {
+  description = "Cron formatted scheduling for resume cluster cronjob. Defaults to 08:45 every weekday"
+  type        = string
+  default     = "45 8 * * 1-5"
+}
