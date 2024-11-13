@@ -26,7 +26,7 @@ resource "azurerm_kubernetes_cluster" "this" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "workloads" {
-  name                      = "wrklddev"
+  name                      = "zoned"
   vm_size                   = "Standard_D2_v2"
   node_count                = 0
   auto_scaling_enabled      = false
