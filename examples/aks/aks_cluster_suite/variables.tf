@@ -135,6 +135,24 @@ variable "pod_node_lifecycle_version" {
   default     = null
 }
 
+variable "install_spothandler_agent" {
+  type        = bool
+  default     = false
+  description = "Optional flag for installation of spothandler agent (https://docs.cast.ai/product-overview/console/security-insights/)"
+}
+
+variable "spothandler_values" {
+  description = "List of YAML formatted string with spothandler values"
+  type        = list(string)
+  default     = []
+}
+
+variable "spothandler_version" {
+  description = "Version of spothandler chart. Default latest"
+  type        = string
+  default     = null
+}
+
 variable "woop_autoscaler_enabled" {
   type        = bool
   description = "Controls if CAST AI workload optimization autoscaler is enabled"
