@@ -204,7 +204,16 @@ resource "helm_release" "castai_pod_node_lifecycle" {
   }
 
   set_sensitive {
-    name  = "castai.apiKey"
+    name  = "api.key"
+    value = var.castai_api_token
+  }
+  set {
+    name  = "api.clusterId"
+    value = castai_aks_cluster.this[0].id
+  }
+
+  depends_on = [helm_release.castai_agent, helm_release.castai_cluster_controller]
+}
     value = var.castai_api_token
   }
 
