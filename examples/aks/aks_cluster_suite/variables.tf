@@ -117,6 +117,24 @@ variable "evictor_version" {
   default     = null
 }
 
+variable "install_pod_node_lifecycle" {
+  type        = bool
+  default     = false
+  description = "Optional flag for installation of castai-pod-node-lifecycle (https://docs.cast.ai/docs/spot-only-cluster)"
+}
+
+variable "pod_node_lifecycle_values" {
+  description = "List of YAML formatted string with pod_node_lifecycle values"
+  type        = list(string)
+  default     = []
+}
+
+variable "pod_node_lifecycle_version" {
+  description = "Version of pod_node_lifecycle chart. Default latest"
+  type        = string
+  default     = null
+}
+
 variable "woop_autoscaler_enabled" {
   type        = bool
   description = "Controls if CAST AI workload optimization autoscaler is enabled"
