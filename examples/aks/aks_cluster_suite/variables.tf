@@ -177,3 +177,21 @@ variable "tags" {
   description = "Optional tags for new cluster nodes. This parameter applies only to new nodes - tags for old nodes are not reconciled."
   default     = {}
 }
+
+variable "pod_pinner_values" {
+  description = "List of YAML formatted string with pod-pinner values"
+  type        = list(string)
+  default     = []
+}
+
+variable "pod_pinner_version" {
+  description = "Version of pod-pinner chart. Default latest"
+  type        = string
+  default     = null
+}
+
+variable "install_precision_packer" {
+  type        = bool
+  default     = false
+  description = "Optional flag for installation of the precision packer (https://docs.cast.ai/docs/pod-pinner)"
+}
