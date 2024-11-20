@@ -45,6 +45,14 @@ module "eks" {
         "system:nodes",
       ]
     },
+    {
+      rolearn = module.castai-eks-role-iam.role_arn
+      username = "system:node:{{EC2PrivateDNSName}}"
+      groups = [
+        "system:bootstrappers",
+        "system:nodes",
+      ]
+    },
   ]
 
 }
